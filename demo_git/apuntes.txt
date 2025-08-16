@@ -1,1 +1,45 @@
-Apuntes GIT
+# Apuntes GIT
+
+216  mkdir sis257_2025_2
+  217  cd sis257_2025_2/
+  218  pwd
+  219  touch README.md
+  220  ls
+  221  ls -la
+  222  echo 'SIS257' > README.md
+  223  cat README.md
+  224  git init
+  225  git status
+  226  git add .
+  227  git status
+  228  git commit -m 'Creación repositorio SIS257 con archivo README'
+  229  git status
+  230  cat README.md
+  231  git checkout -b demo_git
+  232  ls
+  233  echo ' 2/2025' >> README.md
+  234  cat README.md
+  235  nano README.md
+  236  nano README.md
+  237  cat README.md
+  238  mkdir demo_git
+  239  ls
+  240  ls -la
+  241  echo 'Apuntes GIT' > demo_git/apuntes.txt
+  242  cat demo_git/apuntes.txt
+  243  git status
+  244  git add .
+  245  git commit -m 'feat: Se agrega apuntes.txt en demo_git'
+  246  ls
+  247  cat README.md
+  248  git switch main
+  249  cat README.md
+  250  git switch demo_git
+  251  git switch main
+  252  git branch -M main
+  253  git remote add origin https://github.com/enevaca/sis257_2025_2.git
+  254  git push -u origin main
+  255  git merge demo_git
+  256  git push
+  257  git merge demo_git
+  258  history
