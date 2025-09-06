@@ -1,15 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { CreateArtistaDto } from './dto/create-artista.dto';
 import { UpdateArtistaDto } from './dto/update-artista.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Artista } from './entities/artista.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ArtistasService {
+  constructor(@InjectRepository(Artista) private artistasRepository: Repository<Artista>) {}
+
   create(createArtistaDto: CreateArtistaDto) {
     return 'This action adds a new artista';
   }
 
-  findAll() {
-    return `This action returns all artistas`;
+  async findAll(): Promise<Artista[]> {
+    return this.artistasRepository.find();
   }
 
   findOne(id: number) {
