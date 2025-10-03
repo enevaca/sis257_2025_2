@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCancionDto } from './dto/create-cancion.dto';
 import { UpdateCancionDto } from './dto/update-cancion.dto';
 import { Cancion } from './entities/cancion.entity';
@@ -38,15 +38,23 @@ export class CancionesService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cancione`;
+  async findOne(id: number): Promise<Cancion> {
+    const cancion = await this.cancionesRepository.findOne({
+      where: { id },
+      relations: { album: true, genero: true },
+    });
+    if (!cancion) throw new NotFoundException('La canción no existe');
+    return cancion;
   }
 
-  update(id: number, updateCancioneDto: UpdateCancionDto) {
-    return `This action updates a #${id} cancione`;
+  async update(id: number, updateCancionDto: UpdateCancionDto): Promise<Cancion> {
+    const cancion = await this.findOne(id);
+    Object.assign(cancion, updateCancionDto);
+    return this.cancionesRepository.save(cancion);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cancione`;
+  async remove(id: number): Promise<Cancion> {
+    const cancion = await this.findOne(id);
+    return this.cancionesRepository.softRemove(cancion);
   }
 }

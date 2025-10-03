@@ -1,7 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  DefaultValuePipe,
+} from '@nestjs/common';
 import { AlbumesService } from './albumes.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { ApiQuery } from '@nestjs/swagger';
 
 @Controller('albumes')
 export class AlbumesController {
@@ -12,8 +23,9 @@ export class AlbumesController {
     return this.albumesService.create(createAlbumeDto);
   }
 
-  @Get('busqueda/:parametro')
-  findAll(@Param('parametro') parametro?: string) {
+  @Get('busqueda')
+  @ApiQuery({ name: 'parametro', required: false })
+  findAll(@Query('parametro', new DefaultValuePipe('')) parametro?: string) {
     return this.albumesService.findAll(parametro);
   }
 
