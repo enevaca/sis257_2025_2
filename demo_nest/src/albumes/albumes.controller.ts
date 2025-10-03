@@ -12,14 +12,19 @@ export class AlbumesController {
     return this.albumesService.create(createAlbumeDto);
   }
 
-  @Get()
-  findAll() {
-    return this.albumesService.findAll();
+  @Get('busqueda/:parametro')
+  findAll(@Param('parametro') parametro?: string) {
+    return this.albumesService.findAll(parametro);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.albumesService.findOne(+id);
+  }
+
+  @Get('artista/:id')
+  findByArtista(@Param('id') id: string) {
+    return this.albumesService.findByArtista(+id);
   }
 
   @Patch(':id')

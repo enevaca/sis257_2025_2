@@ -3,7 +3,7 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Album } from './entities/album.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class AlbumesService {
@@ -21,8 +21,9 @@ export class AlbumesService {
     return this.albumesRepository.save(album);
   }
 
-  async findAll(): Promise<Album[]> {
+  async findAll(parametro?: string): Promise<Album[]> {
     return this.albumesRepository.find({
+      where: { nombre: ILike(`%${parametro ?? ''}%`) },
       relations: { artista: true },
       select: {
         id: true,
@@ -41,6 +42,13 @@ export class AlbumesService {
     });
     if (!album) throw new NotFoundException('El álbum no existe');
     return album;
+  }
+
+  async findByArtista(idArtista: number): Promise<Album[]> {
+    return await this.albumesRepository.find({
+      where: { idArtista },
+      order: { nombre: 'ASC' },
+    });
   }
 
   async update(id: number, updateAlbumeDto: UpdateAlbumDto): Promise<Album> {
