@@ -1,39 +1,39 @@
 <script setup lang="ts">
-import type { Artista } from '@/models/artista'
+import type { Cancion } from '@/models/cancion'
 import http from '@/plugins/axios'
 import { Button, Dialog, InputGroup, InputGroupAddon, InputText } from 'primevue'
 import { computed, onMounted, ref } from 'vue'
 
-const ENDPOINT = 'artistas'
-const artistas = ref<Artista[]>([])
-const artistaDelete = ref<Artista | null>(null)
+const ENDPOINT = 'canciones'
+const canciones = ref<Cancion[]>([])
+const cancionDelete = ref<Cancion | null>(null)
 const mostrarConfirmDialog = ref<boolean>(false)
 const busqueda = ref<string>('')
 const emit = defineEmits(['edit'])
 
-const artistasFiltrados = computed(() => {
-  return artistas.value.filter(
-    (artista) =>
-      artista.nombre.toLowerCase().includes(busqueda.value.toLowerCase()) ||
-      artista.nacionalidad.toLowerCase().includes(busqueda.value.toLowerCase()),
+const cancionesFiltradas = computed(() => {
+  return canciones.value.filter(
+    (cancion) =>
+      cancion.nombre.toLowerCase().includes(busqueda.value.toLowerCase()) ||
+      cancion.album.artista.nombre.toLowerCase().includes(busqueda.value.toLowerCase()),
   )
 })
 
 async function obtenerLista() {
-  artistas.value = await http.get(ENDPOINT).then((response) => response.data)
+  canciones.value = await http.get(ENDPOINT).then((response) => response.data)
 }
 
-function emitirEdicion(artista: Artista) {
-  emit('edit', artista)
+function emitirEdicion(cancion: Cancion) {
+  emit('edit', cancion)
 }
 
-function mostrarEliminarConfirm(artista: Artista) {
-  artistaDelete.value = artista
+function mostrarEliminarConfirm(cancion: Cancion) {
+  cancionDelete.value = cancion
   mostrarConfirmDialog.value = true
 }
 
 async function eliminar() {
-  await http.delete(`${ENDPOINT}/${artistaDelete.value?.id}`)
+  await http.delete(`${ENDPOINT}/${cancionDelete.value?.id}`)
   obtenerLista()
   mostrarConfirmDialog.value = false
 }
@@ -49,7 +49,7 @@ defineExpose({ obtenerLista })
     <div class="col-7 pl-0 mt-3">
       <InputGroup>
         <InputGroupAddon><i class="pi pi-search"></i></InputGroupAddon>
-        <InputText v-model="busqueda" type="text" placeholder="Buscar por nombre o nacionalidad" />
+        <InputText v-model="busqueda" type="text" placeholder="Buscar por titulo o artista" />
       </InputGroup>
     </div>
 
@@ -58,17 +58,25 @@ defineExpose({ obtenerLista })
         <tr>
           <th>Nro.</th>
           <th>Nombre</th>
-          <th>Nacionalidad</th>
-          <th>Fotografía</th>
+          <th>Artista</th>
+          <th>Album</th>
+          <th>Género</th>
+          <th>Duración</th>
+          <th>Tags</th>
+          <th>URL</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(artista, index) in artistasFiltrados" :key="artista.id">
+        <tr v-for="(artista, index) in cancionesFiltradas" :key="artista.id">
           <td>{{ index + 1 }}</td>
           <td>{{ artista.nombre }}</td>
-          <td>{{ artista.nacionalidad }}</td>
-          <td><img :src="artista.fotografia" alt="foto" width="80" /></td>
+          <td>{{ artista.album.artista.nombre }}</td>
+          <td>{{ artista.album.nombre }}</td>
+          <td>{{ artista.genero.descripcion }}</td>
+          <td>{{ artista.duracion }}</td>
+          <td>{{ artista.tags }}</td>
+          <td><a :href="artista.url" target="_blank">enlace</a></td>
           <td>
             <Button icon="pi pi-pencil" aria-label="Editar" text @click="emitirEdicion(artista)" />
             <Button
@@ -79,7 +87,7 @@ defineExpose({ obtenerLista })
             />
           </td>
         </tr>
-        <tr v-if="artistasFiltrados.length === 0">
+        <tr v-if="cancionesFiltradas.length === 0">
           <td colspan="4">No se encontraron resultados.</td>
         </tr>
       </tbody>
@@ -90,7 +98,7 @@ defineExpose({ obtenerLista })
       header="Confirmar Eliminación"
       :style="{ width: '25rem' }"
     >
-      <p>¿Estás seguro de que deseas eliminar el artista {{ artistaDelete?.nombre }}?</p>
+      <p>¿Estás seguro de que deseas eliminar el artista {{ cancionDelete?.nombre }}?</p>
       <div class="flex justify-end gap-2">
         <Button
           type="button"
