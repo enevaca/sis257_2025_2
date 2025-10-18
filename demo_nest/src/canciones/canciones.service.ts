@@ -31,7 +31,7 @@ export class CancionesService {
         duracion: true,
         tags: true,
         url: true,
-        album: { id: true, nombre: true, artista: { id: true, nombre: true } },
+        album: { id: true, nombre: true, artista: { id: true, nombre: true, fotografia: true } },
         genero: { id: true, descripcion: true },
       },
       order: { nombre: 'ASC' },
@@ -48,7 +48,9 @@ export class CancionesService {
   }
 
   async update(id: number, updateCancionDto: UpdateCancionDto): Promise<Cancion> {
-    const cancion = await this.findOne(id);
+    const cancion = await this.cancionesRepository.findOneBy({ id });
+    if (!cancion) throw new NotFoundException('La canción no existe');
+
     Object.assign(cancion, updateCancionDto);
     return this.cancionesRepository.save(cancion);
   }

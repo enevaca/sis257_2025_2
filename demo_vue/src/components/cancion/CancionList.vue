@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Cancion } from '@/models/cancion'
 import http from '@/plugins/axios'
-import { Button, Dialog, InputGroup, InputGroupAddon, InputText } from 'primevue'
+import { Button, Column, DataTable, Dialog, InputGroup, InputGroupAddon, InputText } from 'primevue'
 import { computed, onMounted, ref } from 'vue'
 
 const ENDPOINT = 'canciones'
@@ -53,7 +53,55 @@ defineExpose({ obtenerLista })
       </InputGroup>
     </div>
 
-    <table>
+    <DataTable
+      :value="cancionesFiltradas"
+      paginator
+      scrollable
+      scrollHeight="flex"
+      :rows="5"
+      :rowsPerPageOptions="[5, 10, 20, 50]"
+      tableStyle="min-width: 50rem"
+      paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+      currentPageReportTemplate="{first} a {last} de {totalRecords}"
+    >
+      <template #paginatorstart>
+        <Button type="button" icon="pi pi-refresh" text @click="obtenerLista" />
+      </template>
+      <Column field="nombre" header="Nombre" sortable style="width: 80px"></Column>
+      <Column header="Artista" sortable style="width: 80px">
+        <template #body="{ data }">
+          <div class="flex items-center gap-2">
+            <img :alt="data.nombre" :src="data.album.artista.fotografia" style="width: 50px" />
+            <span>{{ data.album.artista.nombre }}</span>
+          </div>
+        </template>
+      </Column>
+      <Column field="album.nombre" header="Album" sortable style="width: 80px"></Column>
+      <Column field="genero.descripcion" header="Género" sortable style="width: 50px"></Column>
+      <Column field="duracion" header="Duración" sortable style="width: 50px"></Column>
+      <Column field="tags" header="Tags" sortable style="width: 50px"></Column>
+      <Column header="Acciones" frozen alignFrozen="right" style="min-width: 100px">
+        <template #body="{ data }">
+          <Button
+            icon="pi pi-youtube"
+            aria-label="Enlace"
+            text
+            as="a"
+            :href="data.url"
+            target="_blank"
+          />
+          <Button icon="pi pi-pencil" aria-label="Editar" text @click="emitirEdicion(data)" />
+          <Button
+            icon="pi pi-trash"
+            aria-label="Eliminar"
+            text
+            @click="mostrarEliminarConfirm(data)"
+          />
+        </template>
+      </Column>
+    </DataTable>
+
+    <table v-if="false">
       <thead>
         <tr>
           <th>Nro.</th>
@@ -63,7 +111,6 @@ defineExpose({ obtenerLista })
           <th>Género</th>
           <th>Duración</th>
           <th>Tags</th>
-          <th>URL</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -76,8 +123,15 @@ defineExpose({ obtenerLista })
           <td>{{ artista.genero.descripcion }}</td>
           <td>{{ artista.duracion }}</td>
           <td>{{ artista.tags }}</td>
-          <td><a :href="artista.url" target="_blank">enlace</a></td>
           <td>
+            <Button
+              icon="pi pi-youtube"
+              aria-label="Enlace"
+              text
+              as="a"
+              :href="artista.url"
+              target="_blank"
+            />
             <Button icon="pi pi-pencil" aria-label="Editar" text @click="emitirEdicion(artista)" />
             <Button
               icon="pi pi-trash"
