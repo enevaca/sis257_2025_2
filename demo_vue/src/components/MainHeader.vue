@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
+
+const location = useRoute()
+</script>
 <template>
   <div>
     <header class="site-header">
@@ -6,18 +11,21 @@
           <div class="col-lg-12 col-12 d-flex flex-wrap">
             <p class="d-flex me-4 mb-0">
               <i class="bi-person custom-icon me-2"></i>
-              <strong class="text-dark">Welcome to Music Festival 2023</strong>
+              <strong class="text-dark">Music SIS257</strong>
             </p>
           </div>
         </div>
       </div>
     </header>
 
-    <nav class="navbar navbar-expand-lg">
+    <nav
+      class="navbar navbar-expand-lg"
+      :style="location.path != '/' ? 'background-color: black' : ''"
+    >
       <div class="container">
-        <a class="navbar-brand" href="index.html"> Festava Live </a>
+        <RouterLink to="/" class="navbar-brand"> Music </RouterLink>
 
-        <a href="ticket.html" class="btn custom-btn d-lg-none ms-auto me-4">Buy Ticket</a>
+        <a href="ticket.html" class="btn custom-btn d-lg-none ms-auto me-4">Inciar Sesión</a>
 
         <button
           class="navbar-toggler"
@@ -58,7 +66,7 @@
             </li>
           </ul>
 
-          <a href="ticket.html" class="btn custom-btn d-lg-block d-none">Buy Ticket</a>
+          <a href="ticket.html" class="btn custom-btn d-lg-block d-none">Iniciar Sesión</a>
         </div>
       </div>
     </nav>

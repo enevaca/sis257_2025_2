@@ -67,8 +67,8 @@ defineExpose({ obtenerLista })
       <template #paginatorstart>
         <Button type="button" icon="pi pi-refresh" text @click="obtenerLista" />
       </template>
-      <Column field="nombre" header="Nombre" sortable style="width: 80px"></Column>
-      <Column header="Artista" sortable style="width: 80px">
+      <Column field="nombre" header="Nombre" sortable style="min-width: 120px"></Column>
+      <Column header="Artista" sortable style="min-width: 120px">
         <template #body="{ data }">
           <div class="flex items-center gap-2">
             <img :alt="data.nombre" :src="data.album.artista.fotografia" style="width: 50px" />
@@ -76,11 +76,11 @@ defineExpose({ obtenerLista })
           </div>
         </template>
       </Column>
-      <Column field="album.nombre" header="Album" sortable style="width: 80px"></Column>
-      <Column field="genero.descripcion" header="Género" sortable style="width: 50px"></Column>
-      <Column field="duracion" header="Duración" sortable style="width: 50px"></Column>
-      <Column field="tags" header="Tags" sortable style="width: 50px"></Column>
-      <Column header="Acciones" frozen alignFrozen="right" style="min-width: 100px">
+      <Column field="album.nombre" header="Album" sortable style="min-width: 120px"></Column>
+      <Column field="genero.descripcion" header="Género" sortable style="min-width: 50px"></Column>
+      <Column field="duracion" header="Duración" sortable style="min-width: 50px"></Column>
+      <Column field="tags" header="Tags" sortable style="min-width: 50px"></Column>
+      <Column header="Acciones" frozen alignFrozen="right" style="min-width: 160px">
         <template #body="{ data }">
           <Button
             icon="pi pi-youtube"
