@@ -8,12 +8,16 @@ import {
   Delete,
   Query,
   DefaultValuePipe,
+  UseGuards,
 } from '@nestjs/common';
 import { AlbumesService } from './albumes.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('albumes')
 export class AlbumesController {
   constructor(private readonly albumesService: AlbumesService) {}

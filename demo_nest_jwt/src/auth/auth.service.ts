@@ -22,10 +22,11 @@ export class AuthService {
     return { ...usuarioOk, access_token };
   }
 
-  async getAccessToken(payload) {
+  async getAccessToken(payload: JwtPayload) {
+    type StringValue = `${number}s`;
     const accessToken = await this.jwtService.signAsync(payload, {
       secret: process.env.JWT_TOKEN,
-      // expiresIn: process.env.JWT_TOKEN_EXPIRATION,
+      expiresIn: process.env.JWT_TOKEN_EXPIRATION as StringValue,
     });
     return accessToken;
   }
@@ -35,7 +36,7 @@ export class AuthService {
 
     try {
       usuario = await this.usuarioService.findOne(payload.sub);
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException(`Usuario inválido: ${payload.sub}`);
     }
 
